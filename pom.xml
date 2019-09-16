@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rapid7.ias.bamboo</groupId>
     <artifactId>insightappsec-bamboo-plugin</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.2.0</version>
     <scm>
         <url>https://github.com/rapid7/insightappsec-bamboo-plugin</url>
         <connection>scm:git:git@github.com:rapid7/insightappsec-bamboo-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:rapid7/insightappsec-bamboo-plugin.git</developerConnection>
-    </scm>
+      <tag>insightappsec-bamboo-plugin-0.2.0</tag>
+  </scm>
 
     <organization>
         <name>Rapid7</name>
