@@ -1,0 +1,34 @@
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/rapid7-icon.png</param>
+        <param name="plugin-logo">images/rapid7-icon.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="com.rapid7.ias.bamboo.i18n"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="insightappsec-bamboo-plugin-resources" name="insightappsec-bamboo-plugin Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        
+        <resource type="download" name="insightappsec-bamboo-plugin.css" location="/css/insightappsec-bamboo-plugin.css"/>
+        <resource type="download" name="insightappsec-bamboo-plugin.js" location="/js/insightappsec-bamboo-plugin.js"/>
+        <resource type="download" name="images/" location="/images"/>
+
+        <context>insightappsec-bamboo-plugin</context>
+    </web-resource>
+
+    <taskType name="Rapid7 InsightAppSec Scan" class="com.rapid7.ias.bamboo.impl.InsightAppSecScanTask" key="task.insightappsec.scan">
+        <description>Kick off an InsightAppSec scan</description>
+        <category name="builder"/>
+        <category name="deployment"/>
+        <configuration class="com.rapid7.ias.bamboo.impl.InsightAppSecScanTaskConfigurator"/>
+        <resource type="freemarker" name="edit" location="template/InsightAppSecScanTaskTemplate.ftl"/>
+        <resource type="download" name="icon" location="images/rapid7-icon.png"/>
+        <help link="task.help.link" title="task.help.title" />
+    </taskType>
+    
+</atlassian-plugin>
