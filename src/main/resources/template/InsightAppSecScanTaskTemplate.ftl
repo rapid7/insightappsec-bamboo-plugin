@@ -3,7 +3,7 @@
     [@ui.bambooSection dependsOn="region" showOn="OTHER"]
         [@ww.textfield labelKey="label.otherRegion" name="otherRegion"/]
     [/@ui.bambooSection]
-    [@ww.select labelKey="label.credentialList" name="selectedCred" required="true" list="credentialList"/]
+    [@ww.select labelKey="label.credentialList" name="selectedCred" required='true' list="credentialList"/]
     [@ww.textfield  labelKey="label.appName" name="appName" required='true'/]
     [@ww.textfield labelKey="label.scanConfigName" name="scanConfigName" required='true'/]
 [/@ui.bambooSection]
@@ -13,8 +13,8 @@
 [/@ui.bambooSection]
 
 [@ui.bambooSection titleKey="section.status" dependsOn="advanceOn" showOn="STARTED"]
-    [@ww.textfield labelKey="label.statusCheckInterval" name="checkInterval"/]
-    [@ww.textfield labelKey="label.maxPendingDuration" name="maxPending"/]
+    [@ww.textfield labelKey="label.statusCheckInterval" name="checkIntervalStarted"/]
+    [@ww.textfield labelKey="label.maxPendingDuration" name="maxPendingStarted"/]
 [/@ui.bambooSection]
 
 [@ui.bambooSection titleKey="section.status" dependsOn="advanceOn" showOn="COMPLETED"]

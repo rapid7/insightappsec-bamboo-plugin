@@ -17,6 +17,8 @@ Marketplace: https://marketplace.atlassian.com/1221109
 3. Install Atlassian SDK
    * Linux/Mac: https://developer.atlassian.com/docs/getting-started/set-up-the-atlassian-plugin-sdk-and-build-a-project/install-the-atlassian-sdk-on-a-linux-or-mac-system
    * Windows: https://developer.atlassian.com/docs/getting-started/set-up-the-atlassian-plugin-sdk-and-build-a-project/install-the-atlassian-sdk-on-a-windows-system
+     * brew tap atlassian/tap
+     * brew install atlassian/tap/atlassian-plugin-sdk
 4. Configure IDE (IntelliJ below) to use Atlassian SDK
    * Navigate to: Preferences -> Build, Execution, Deployment -> Build Tools -> Maven
      * (example) Maven home directory: /usr/local/Cellar/atlassian-plugin-sdk/6.3.10/libexec/apache-maven-3.2.1
@@ -35,6 +37,12 @@ Bamboo.  Ensure your development environment is set up and then run:
 
 Once the servlet has started up, Bamboo should be reachable locally at `http://localhost:6990/bamboo/`.  The default 
 username is `admin` and password is `admin`.
+
+In order to reload plugin changes within a locally running instance of Bamboo, the Atlassian SDK can also be used:
+```bash
+> atlas-package
+> atlas-install-plugin
+```
 
 ### Useful Atlassian SDK Commands
 Here are the SDK commands every project can benefit from:

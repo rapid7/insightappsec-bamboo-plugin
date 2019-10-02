@@ -1,5 +1,6 @@
 package it.com.rapid7.ias.bamboo;
 
+import com.rapid7.ias.bamboo.impl.InsightAppSecException;
 import com.rapid7.ias.bamboo.impl.InsightAppSecHelper;
 import com.rapid7.ias.client.model.ResourceVulnerability;
 
@@ -10,7 +11,7 @@ public class InsightAppSecHelperTest {
     private static final String API_KEY = "";
     private static final String SCAN_ID = "";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InsightAppSecException {
         InsightAppSecHelper ias = new InsightAppSecHelper(REGION, API_KEY, null);
 
         List<ResourceVulnerability> findings = ias.getFindings(SCAN_ID, "");

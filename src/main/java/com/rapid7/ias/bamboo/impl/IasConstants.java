@@ -11,9 +11,11 @@ public interface IasConstants {
     String REGION_LIST                = "regionList";
     String SELECTED_REGION            = "region";
     String OTHER_REGION               = "otherRegion";
+    String CHECK_INTERVAL_STARTED     = "checkIntervalStarted";
+    String MAX_PENDING_STARTED        = "maxPendingStarted";
     String CHECK_INTERVAL             = "checkInterval";
-    String MAX_EXECUTION              = "maxExecution";
     String MAX_PENDING                = "maxPending";
+    String MAX_EXECUTION              = "maxExecution";
     String SELECTED_ADVANCE_ON        = "advanceOn";
     String ADVANCE_ON                 = "advanceOnOptions";
     String FINDINGS_REPORT_GENERATION = "findingsReportGeneration";
