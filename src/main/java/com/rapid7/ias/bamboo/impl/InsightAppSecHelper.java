@@ -41,7 +41,13 @@ public class InsightAppSecHelper {
         vulnerabilitiesApi = new VulnerabilitiesApi(client);
     }
 
-    public String runScan(UUID scanConfigId){
+    private void handleException(ApiException exception) throws InsightAppSecException {
+        if (exception.getCode() == 401) {
+            throw new InsightAppSecException(exception.getResponseBody());
+        }
+    }
+
+    public String runScan(UUID scanConfigId) throws InsightAppSecException {
         Scan scan = new Scan(); // Scan | scan
         RequiredIdResource scanConfig = new RequiredIdResource();
 
@@ -75,6 +81,8 @@ public class InsightAppSecHelper {
             return scanId;
         } catch (com.rapid7.ias.client.ApiException iase) {
             logger.error("InsightAppSec Scan Exception: " + iase.getResponseBody() + " (" + iase.getCode() + ")");
+            handleException(iase);
+
             return null;
         } catch (Exception e) {
             logger.error("Exception when calling ScansApi#submitScan: " + e.toString());
@@ -82,7 +90,7 @@ public class InsightAppSecHelper {
         }
     }
 
-    public Map<String,String> scanStatus(String scanId) {
+    public Map<String,String> scanStatus(String scanId) throws InsightAppSecException {
         Map<String, String> status = new HashMap<String,String>() {{
             put("Status", "Unknown");
             put("Reason", "Unknown");
@@ -101,11 +109,12 @@ public class InsightAppSecHelper {
             }};
         } catch (ApiException iase) {
             logger.error("Failed to retrieve scan by ID " + scanId + ": " + iase.getCode());
+            handleException(iase);
         }
         return status;
     }
 
-    public ResourceScanConfig getScanConfiguration(String scanConfigName, UUID appId) {
+    public ResourceScanConfig getScanConfiguration(String scanConfigName, UUID appId) throws InsightAppSecException {
         Integer index = 0;
         Integer size = 1000;
         Boolean cont = true;
@@ -127,6 +136,8 @@ public class InsightAppSecHelper {
                 }
             } catch (com.rapid7.ias.client.ApiException iase) {
                 logger.error("IAS Scan Config Exception: " + iase.getResponseBody() + " (" + iase.getCode() + ")");
+                handleException(iase);
+
                 return null;
             } catch (Exception e) {
                 logger.error("Exception when calling ScanConfigsApi#getScanConfigs: " + e.toString());
@@ -140,7 +151,7 @@ public class InsightAppSecHelper {
         return null;
     }
 
-    public ResourceApp getApplication(String appName) {
+    public ResourceApp getApplication(String appName) throws InsightAppSecException {
         Integer index = 0;
         Integer size = 1000;
         Boolean cont = true;
@@ -163,9 +174,11 @@ public class InsightAppSecHelper {
             } catch (com.rapid7.ias.client.ApiException iase) {
                 logger.error("InsightAppSec Apps Client Exception: " + iase.getResponseBody() +
                         " (" + iase.getCode() + ")");
+                handleException(iase);
+
                 return null;
             } catch (Exception e) {
-                logger.error("Exception when calling AppsApi#getApps");
+                logger.error("Exception when calling AppsApi#getApps: " + e.getMessage());
                 return null;
             }
 
@@ -176,7 +189,7 @@ public class InsightAppSecHelper {
         return null;
     }
 
-    public List<ResourceVulnerability> getFindings(String scanId, String queryCondition) {
+    public List<ResourceVulnerability> getFindings(String scanId, String queryCondition) throws InsightAppSecException {
         Integer totalPages;
         Integer page = 0;
         Integer size = 1000;
@@ -210,6 +223,8 @@ public class InsightAppSecHelper {
             } catch (com.rapid7.ias.client.ApiException iase) {
                 logger.error("InsightAppSec Apps Client Exception: " + iase.getResponseBody() +
                         " (" + iase.getCode() + ")");
+                handleException(iase);
+
                 return null;
             } catch (Exception e) {
                 logger.error("Exception when calling SearchApi#performSearch");

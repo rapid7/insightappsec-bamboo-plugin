@@ -70,9 +70,14 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
         configMap.put(SCAN_CONFIG_NAME,params.getString(SCAN_CONFIG_NAME));
         // Plugin action after scan triggered
         configMap.put(SELECTED_ADVANCE_ON,params.getString(SELECTED_ADVANCE_ON));
-        configMap.put(CHECK_INTERVAL,params.getString(CHECK_INTERVAL));
-        configMap.put(MAX_EXECUTION,params.getString(MAX_EXECUTION));
-        configMap.put(MAX_PENDING,params.getString(MAX_PENDING));
+        if (params.getString(SELECTED_ADVANCE_ON) == "STARTED") {
+            configMap.put(CHECK_INTERVAL,params.getString(CHECK_INTERVAL_STARTED));
+            configMap.put(MAX_PENDING,params.getString(MAX_PENDING_STARTED));
+        } else if (params.getString(SELECTED_ADVANCE_ON) == "COMPLETED") {
+            configMap.put(CHECK_INTERVAL,params.getString(CHECK_INTERVAL));
+            configMap.put(MAX_PENDING,params.getString(MAX_PENDING));
+            configMap.put(MAX_EXECUTION,params.getString(MAX_EXECUTION));
+        }
         configMap.put(FINDINGS_REPORT_GENERATION,params.getString(FINDINGS_REPORT_GENERATION));
         configMap.put(VULN_QUERY_ENFORCEMENT,params.getString(VULN_QUERY_ENFORCEMENT));
         // Reporting related configs
@@ -98,27 +103,36 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
         }
 
         String credentialId = params.getString(SELECTED_CREDENTIAL);
-        CredentialsData cred = credentialsManager.getCredentials(Long.parseLong(credentialId));
-
         String appNameValue = params.getString(APP_NAME);
         String scanConfigNameValue = params.getString(SCAN_CONFIG_NAME);
 
-        if (StringUtils.isEmpty(regionValue)){
+        if (credentialId == null) {
+            errorCollection.addError(SELECTED_CREDENTIAL, i18nBean.getText("error.apiKey"));
+        }else if (credentialsManager.getCredentials(Long.parseLong(credentialId)) == null) {
+            errorCollection.addError(SELECTED_CREDENTIAL, i18nBean.getText("error.apiKeyNotExist"));
+        }else if (StringUtils.isEmpty(regionValue)){
             errorCollection.addError(SELECTED_REGION, i18nBean.getText("error.region"));
         }else if(StringUtils.isEmpty(appNameValue)){
             errorCollection.addError(APP_NAME, i18nBean.getText("error.appName"));
         }else if(StringUtils.isEmpty(scanConfigNameValue)){
             errorCollection.addError(SCAN_CONFIG_NAME, i18nBean.getText("error.scanConfigName"));
         }else{
+            CredentialsData cred = credentialsManager.getCredentials(Long.parseLong(credentialId));
+
             InsightAppSecHelper iasHelper = new InsightAppSecHelper(regionValue, cred.getConfiguration().get("password"), logger);
-            ResourceApp application = iasHelper.getApplication(appNameValue);
-            if (application == null) {
-                errorCollection.addError(APP_NAME, i18nBean.getText("error.invalidAppConfig"));
-            } else {
-                ResourceScanConfig scanConfig = iasHelper.getScanConfiguration(scanConfigNameValue, application.getId());
-                if (scanConfig == null) {
-                    errorCollection.addError(SCAN_CONFIG_NAME, i18nBean.getText("error.invalidScanConfig"));
+
+            try {
+                ResourceApp application = iasHelper.getApplication(appNameValue);
+                if (application == null) {
+                    errorCollection.addError(APP_NAME, i18nBean.getText("error.invalidAppConfig"));
+                } else {
+                    ResourceScanConfig scanConfig = iasHelper.getScanConfiguration(scanConfigNameValue, application.getId());
+                    if (scanConfig == null) {
+                        errorCollection.addError(SCAN_CONFIG_NAME, i18nBean.getText("error.invalidScanConfig"));
+                    }
                 }
+            } catch (InsightAppSecException iase) {
+                errorCollection.addError(SELECTED_CREDENTIAL, i18nBean.getText("error.authFailure"));
             }
         }
     }
@@ -130,7 +144,10 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
     @Override
     public void populateContextForCreate(@NotNull final Map<String,Object> context){
         super.populateContextForCreate(context);
-        context.put(CREDENTIAL_LIST, getCredentials());
+        Map<Long, String> credentials = getCredentials();
+        if (credentials.size() > 0) {
+            context.put(CREDENTIAL_LIST, getCredentials());
+        }
         context.put(REGION_LIST, REGION_OPTIONS_LIST);
         context.put(CHECK_INTERVAL, i18nBean.getText("default.checkInterval"));
         context.put(MAX_EXECUTION, i18nBean.getText("default.maxExecution"));
