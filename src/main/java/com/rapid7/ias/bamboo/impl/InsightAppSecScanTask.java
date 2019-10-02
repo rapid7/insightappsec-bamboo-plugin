@@ -56,6 +56,13 @@ public class InsightAppSecScanTask implements CommonTaskType, IasConstants {
         String credentialId = configMap.get(SELECTED_CREDENTIAL);
         CredentialsData cred = credentialsManager.getCredentials(Long.parseLong(credentialId));
 
+        if (cred == null) {
+            logger.error("Previously configured credential is no longer defined within Bamboo; please review task and" +
+                    "credential configuration");
+            Thread.currentThread().interrupt();
+            return result.failedWithError().build();
+        }
+
         logger.info("Rapid7 InsightAppSec Platform Region: " + region);
         logger.info("App: " + appName);
         logger.info("Scan Config: "+ scanConfigName);
@@ -126,7 +133,7 @@ public class InsightAppSecScanTask implements CommonTaskType, IasConstants {
 
                 // Stop early if max pending reached
                 if (scanStatus.get("Status").equals("PENDING") &&
-                        elapsedTime > Integer.parseInt(configMap.get(MAX_PENDING))) {
+                        elapsedTime > Integer.parseInt(configMap.getOrDefault(MAX_PENDING, "30"))) {
                     logger.info("Scan reached max pending timeout, failing task for scan ID: " + scanId);
                     Thread.currentThread().interrupt();
                     return result.failed().build();
@@ -134,21 +141,22 @@ public class InsightAppSecScanTask implements CommonTaskType, IasConstants {
 
                 // Stop early if max execution reached
                 if (!scanStatus.get("Status").equals("COMPLETE") &&
-                        elapsedTime > Integer.parseInt(configMap.get(MAX_EXECUTION))) {
+                        elapsedTime > Integer.parseInt(configMap.getOrDefault(MAX_EXECUTION, "120"))) {
                     logger.info("Scan reached max execution timeout, failing task for scan ID: " + scanId);
                     Thread.currentThread().interrupt();
                     return result.failed().build();
                 }
 
                 // Sleep before attempting again
-                logger.debug("Sleeping for " + configMap.get(CHECK_INTERVAL) + " minutes while scanning");
+                String checkInterval = configMap.getOrDefault(CHECK_INTERVAL, "5");
+                logger.debug("Sleeping for " + checkInterval + " minutes while scanning");
                 try {
-                    TimeUnit.MINUTES.sleep(Integer.parseInt(configMap.get(CHECK_INTERVAL)));
+                    TimeUnit.MINUTES.sleep(Integer.parseInt(checkInterval));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 // Increment elapsed time
-                elapsedTime += Integer.parseInt(configMap.get(CHECK_INTERVAL));
+                elapsedTime += Integer.parseInt(checkInterval);
             }
 
             if (scanStatus.get("Status").equals("COMPLETE")) {

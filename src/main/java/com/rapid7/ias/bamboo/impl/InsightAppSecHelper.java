@@ -135,7 +135,7 @@ public class InsightAppSecHelper {
                     cont = false;
                 }
             } catch (com.rapid7.ias.client.ApiException iase) {
-                logger.error("IAS Scan Config Exception: " + iase.getResponseBody() + " (" + iase.getCode() + ")");
+                logger.error("InsightAppSec Scan Config Exception: " + iase.getResponseBody() + " (" + iase.getCode() + ")");
                 handleException(iase);
 
                 return null;
