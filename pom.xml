@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rapid7.ias.bamboo</groupId>
     <artifactId>insightappsec-bamboo-plugin</artifactId>
-    <version>0.2.1-SNAPSHOT</version>
+    <version>0.2.2-SNAPSHOT</version>
     <scm>
         <url>https://github.com/rapid7/insightappsec-bamboo-plugin</url>
         <connection>scm:git:git@github.com:rapid7/insightappsec-bamboo-plugin.git</connection>
