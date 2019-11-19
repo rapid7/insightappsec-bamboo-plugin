@@ -12,8 +12,7 @@ hub_tags:
   keywords: [atlassian, bamboo, dast, security]
   features: []
 resources:
-  source_url: https://github.com/rapid7/insightappsec-bamboo-plugin/tree/master
+  source_url: https://github.com/rapid7/insightappsec-bamboo-plugin
   license_url: https://github.com/rapid7/insightappsec-bamboo-plugin/blob/master/LICENSE
   vendor_url: https://www.atlassian.com/software/bamboo
   external_url: https://marketplace.atlassian.com/apps/1221109/rapid7-insightappsec-for-bamboo
-  replacement_url:
