@@ -1,4 +1,4 @@
-extension: standalone
+extension: integration
 products: [insightappsec]
 name: insightappsec_bamboo_plugin
 title: InsightAppSec Bamboo Plugin
@@ -16,3 +16,10 @@ resources:
   license_url: https://github.com/rapid7/insightappsec-bamboo-plugin/blob/master/LICENSE
   vendor_url: https://www.atlassian.com/software/bamboo
   external_url: https://marketplace.atlassian.com/apps/1221109/rapid7-insightappsec-for-bamboo
+  screenshots:
+    - name: screenshot1.png
+      title: Rapid7 InsightAppSec Scan Task
+    - name: screenshot2.png
+      title: Configuring the plugin task
+    - name: screenshot3.png
+      title: InsightAppSec scan triggered by plugin task
