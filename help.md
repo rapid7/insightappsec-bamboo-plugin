@@ -11,7 +11,7 @@ The Rapid7 InsightAppSec Bamboo plugin leverages the InsightAppSec RESTful API t
 
 # Requirements
 
-An InsightAppSec API key is required for this integration to perform InsightAppSec scanning operations. The steps for generating an InsightAppSec API key are available [here](https://insightappsec.help.rapid7.com/docs/get-started-with-the-insightappsec-api).
+* Rapid7 Platform API Key
 
 # Documentation
 
@@ -80,4 +80,5 @@ If the scan gating doesn't appear to occur as expected, confirm that the vulnera
 ## References
 
 * [Atlassian SDK Documentation](https://developer.atlassian.com/server/framework/atlassian-sdk/downloads/)
-* [InsightAppSec API Documentation] (https://help.rapid7.com/insightappsec/en-us/api/v1/docs.html)
+* [InsightAppSec API Documentation](https://help.rapid7.com/insightappsec/en-us/api/v1/docs.html)
+* [Create a Rapid7 Platform API Key](https://insightappsec.help.rapid7.com/docs/get-started-with-the-insightappsec-api)
