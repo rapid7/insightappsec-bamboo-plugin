@@ -1,15 +1,15 @@
-extension: integration
+extension: integration_listing
 products: [insightappsec]
 name: insightappsec_bamboo_plugin
-title: InsightAppSec Bamboo Plugin
-description: This plugin leverages the InsightAppSec API to automate web application scanning as part of a Bamboo build or release pipeline.
+title: Atlassian Bamboo Plugin
+description: Integrate InsightAppSec application security scans into Atlassian Bamboo build and release pipelines
 version: 0.2.1
 vendor: rapid7
 status: []
 support: rapid7
 hub_tags:
-  use_cases: [application_security, ci_cd]
-  keywords: [atlassian, bamboo, dast, security]
+  use_cases: [devops]
+  keywords: [atlassian, bamboo, dast]
   features: []
 resources:
   source_url: https://github.com/rapid7/insightappsec-bamboo-plugin
