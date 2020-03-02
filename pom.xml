@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rapid7.ias.bamboo</groupId>
     <artifactId>insightappsec-bamboo-plugin</artifactId>
-    <version>0.2.1</version>
+    <version>1.0.0</version>
     <scm>
         <url>https://github.com/rapid7/insightappsec-bamboo-plugin</url>
         <connection>scm:git:git@github.com:rapid7/insightappsec-bamboo-plugin.git</connection>
@@ -23,8 +23,8 @@
     <packaging>atlassian-plugin</packaging>
 
     <properties>
-        <bamboo.version>6.9.2</bamboo.version>
-        <bamboo.data.version>6.9.2</bamboo.data.version>
+        <bamboo.version>6.10.4</bamboo.version>
+        <bamboo.data.version>6.10.4</bamboo.data.version>
         <amps.version>6.3.21</amps.version>
         <plugin.testrunner.version>1.2.3</plugin.testrunner.version>
         <atlassian.spring.scanner.version>1.2.13</atlassian.spring.scanner.version>
