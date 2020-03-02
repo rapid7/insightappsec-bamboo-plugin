@@ -3,7 +3,7 @@ products: [insightappsec]
 name: insightappsec_bamboo_plugin
 title: Atlassian Bamboo Plugin
 description: Integrate InsightAppSec application security scans into Atlassian Bamboo build and release pipelines
-version: 0.2.1
+version: 1.0.0
 vendor: rapid7
 status: []
 support: rapid7
