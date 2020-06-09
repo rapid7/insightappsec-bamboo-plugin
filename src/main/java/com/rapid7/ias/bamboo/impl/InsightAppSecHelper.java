@@ -100,7 +100,7 @@ public class InsightAppSecHelper {
             ResourceScan scan = scansApi.getScan(UUID.fromString(scanId));
 
             status = new HashMap<String,String>() {{
-                put("Status", scan.getStatus().getValue());
+                put("Status", Objects.toString(scan.getStatus().getValue(), "Unknown"));
                 if (scan.getFailureReason() != null) {
                     put("Reason", Objects.toString(scan.getFailureReason().getValue(), ""));
                 } else {

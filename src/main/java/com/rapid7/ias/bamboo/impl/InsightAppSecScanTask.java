@@ -46,13 +46,14 @@ public class InsightAppSecScanTask implements CommonTaskType, IasConstants {
 
         // Get RuntimeContext for pre-task pull of API Key
         Map<String, String> runtimeContext = taskContext.getRuntimeTaskContext();
+        final String apiKey = runtimeContext.get(CFG_PASSWORD);
 
         ConfigurationMap configMap = taskContext.getConfigurationMap();
         region = configMap.get(SELECTED_REGION);
         appName = configMap.get(APP_NAME);
         scanConfigName = configMap.get(SCAN_CONFIG_NAME);
 
-        if (runtimeContext.get(CFG_PASSWORD) == null) {
+        if (apiKey == null) {
             logger.error("Previously configured credential is no longer defined within Bamboo; please review task and" +
                     " credential configuration");
             Thread.currentThread().interrupt();
@@ -64,7 +65,7 @@ public class InsightAppSecScanTask implements CommonTaskType, IasConstants {
         logger.info("Scan Config: "+ scanConfigName);
 
         // Initialize helper with necessary clients
-        InsightAppSecHelper iasHelper = new InsightAppSecHelper(region, runtimeContext.get(CFG_PASSWORD), logger);
+        InsightAppSecHelper iasHelper = new InsightAppSecHelper(region, apiKey, logger);
 
         try {
             ResourceApp app = iasHelper.getApplication(appName);
