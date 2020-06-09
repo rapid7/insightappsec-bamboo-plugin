@@ -2,7 +2,7 @@ package com.rapid7.ias.bamboo.impl;
 
 import com.atlassian.bamboo.collections.ActionParametersMap;
 import com.atlassian.bamboo.credentials.CredentialsData;
-import com.atlassian.bamboo.credentials.CredentialsManager;
+import com.atlassian.bamboo.credentials.CredentialsAccessor;
 import com.atlassian.bamboo.task.AbstractTaskConfigurator;
 import com.atlassian.bamboo.task.TaskDefinition;
 import com.atlassian.bamboo.utils.error.ErrorCollection;
@@ -10,8 +10,9 @@ import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.bamboo.utils.i18n.I18nBean;
 import com.atlassian.bamboo.utils.i18n.I18nBeanFactory;
-import com.atlassian.util.concurrent.NotNull;
-import com.atlassian.util.concurrent.Nullable;
+import static com.atlassian.bamboo.credentials.UsernamePasswordCredentialType.CFG_PASSWORD;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.rapid7.ias.bamboo.util.UtilityLogger;
 import com.rapid7.ias.client.model.ResourceApp;
@@ -26,18 +27,18 @@ import java.util.Map;
 @Scanned
 public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator implements IasConstants {
 
-    private CredentialsManager credentialsManager;
+    @ComponentImport CredentialsAccessor credentialsAccessor;
     private I18nBean i18nBean;
 
     /**
      *
      * @param i18nBeanFactory
-     * @param credentialsManager
+     * @param credentialsAccessor
      */
     public InsightAppSecScanTaskConfigurator(
             @ComponentImport I18nBeanFactory i18nBeanFactory,
-            @ComponentImport CredentialsManager credentialsManager) {
-        this.credentialsManager = credentialsManager;
+            @ComponentImport CredentialsAccessor credentialsAccessor) {
+        this.credentialsAccessor = credentialsAccessor;
         this.i18nBean = i18nBeanFactory.getI18nBean();
     }
 
@@ -47,7 +48,7 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
      */
     private Map<Long, String> getCredentials() {
         Map<Long, String> credentials = new Hashtable<>();
-        for (CredentialsData data : credentialsManager.getAllCredentials()) {
+        for (CredentialsData data : credentialsAccessor.getAllCredentials()) {
             if (data.getName().startsWith("Rapid7")) {
                 credentials.put(data.getId(), data.getName());
             }
@@ -107,7 +108,7 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
 
         if (credentialId == null) {
             errorCollection.addError(SELECTED_CREDENTIAL, i18nBean.getText("error.apiKey"));
-        }else if (credentialsManager.getCredentials(Long.parseLong(credentialId)) == null) {
+        }else if (credentialsAccessor.getCredentials(Long.parseLong(credentialId)) == null) {
             errorCollection.addError(SELECTED_CREDENTIAL, i18nBean.getText("error.apiKeyNotExist"));
         }else if (StringUtils.isEmpty(regionValue)){
             errorCollection.addError(SELECTED_REGION, i18nBean.getText("error.region"));
@@ -116,9 +117,9 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
         }else if(StringUtils.isEmpty(scanConfigNameValue)){
             errorCollection.addError(SCAN_CONFIG_NAME, i18nBean.getText("error.scanConfigName"));
         }else{
-            CredentialsData cred = credentialsManager.getCredentials(Long.parseLong(credentialId));
+            CredentialsData cred = credentialsAccessor.getCredentials(Long.parseLong(credentialId));
 
-            InsightAppSecHelper iasHelper = new InsightAppSecHelper(regionValue, cred.getConfiguration().get("password"), logger);
+            InsightAppSecHelper iasHelper = new InsightAppSecHelper(regionValue, cred.getConfiguration().get(CFG_PASSWORD), logger);
 
             try {
                 ResourceApp application = iasHelper.getApplication(appNameValue);

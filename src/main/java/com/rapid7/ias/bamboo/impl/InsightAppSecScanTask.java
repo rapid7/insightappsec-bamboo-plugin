@@ -1,8 +1,6 @@
 package com.rapid7.ias.bamboo.impl;
 
 import com.atlassian.bamboo.configuration.ConfigurationMap;
-import com.atlassian.bamboo.credentials.CredentialsData;
-import com.atlassian.bamboo.credentials.CredentialsManager;
 import com.atlassian.bamboo.plan.artifact.ArtifactDefinitionContext;
 import com.atlassian.bamboo.plan.artifact.ArtifactDefinitionContextImpl;
 import com.atlassian.bamboo.plan.artifact.ArtifactPublishingResult;
@@ -11,6 +9,7 @@ import com.atlassian.bamboo.util.Narrow;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.bamboo.build.artifact.ArtifactManager;
+import static com.atlassian.bamboo.credentials.UsernamePasswordCredentialType.CFG_PASSWORD;
 
 import com.rapid7.ias.bamboo.util.UtilityLogger;
 import com.rapid7.ias.client.model.ResourceApp;
@@ -26,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 
 @Scanned
 public class InsightAppSecScanTask implements CommonTaskType, IasConstants {
-    private CredentialsManager credentialsManager;
     private UtilityLogger logger;
     private static final Logger log = Logger.getLogger(InsightAppSecScanTask.class);
 
@@ -36,9 +34,7 @@ public class InsightAppSecScanTask implements CommonTaskType, IasConstants {
 
     @ComponentImport ArtifactManager artifactManager;
 
-    public InsightAppSecScanTask(@ComponentImport ArtifactManager artifactManager,
-                                 @ComponentImport CredentialsManager credentialsManager) {
-        this.credentialsManager = credentialsManager;
+    public InsightAppSecScanTask(@ComponentImport ArtifactManager artifactManager) {
         this.artifactManager = artifactManager;
     }
 
@@ -48,17 +44,17 @@ public class InsightAppSecScanTask implements CommonTaskType, IasConstants {
         TaskResultBuilder result = TaskResultBuilder.newBuilder(taskContext);
         logger = new UtilityLogger(log, taskContext.getBuildLogger());
 
+        // Get RuntimeContext for pre-task pull of API Key
+        Map<String, String> runtimeContext = taskContext.getRuntimeTaskContext();
+
         ConfigurationMap configMap = taskContext.getConfigurationMap();
         region = configMap.get(SELECTED_REGION);
         appName = configMap.get(APP_NAME);
         scanConfigName = configMap.get(SCAN_CONFIG_NAME);
 
-        String credentialId = configMap.get(SELECTED_CREDENTIAL);
-        CredentialsData cred = credentialsManager.getCredentials(Long.parseLong(credentialId));
-
-        if (cred == null) {
+        if (runtimeContext.get(CFG_PASSWORD) == null) {
             logger.error("Previously configured credential is no longer defined within Bamboo; please review task and" +
-                    "credential configuration");
+                    " credential configuration");
             Thread.currentThread().interrupt();
             return result.failedWithError().build();
         }
@@ -68,7 +64,7 @@ public class InsightAppSecScanTask implements CommonTaskType, IasConstants {
         logger.info("Scan Config: "+ scanConfigName);
 
         // Initialize helper with necessary clients
-        InsightAppSecHelper iasHelper = new InsightAppSecHelper(region, cred.getConfiguration().get("password"), logger);
+        InsightAppSecHelper iasHelper = new InsightAppSecHelper(region, runtimeContext.get(CFG_PASSWORD), logger);
 
         try {
             ResourceApp app = iasHelper.getApplication(appName);

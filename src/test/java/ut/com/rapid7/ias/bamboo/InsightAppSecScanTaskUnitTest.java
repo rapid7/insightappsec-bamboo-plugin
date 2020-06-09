@@ -10,7 +10,7 @@ public class InsightAppSecScanTaskUnitTest
     @Test
     public void testMyName()
     {
-        InsightAppSecScanTask component = new InsightAppSecScanTask(null, null);
+        InsightAppSecScanTask component = new InsightAppSecScanTask(null);
         assertEquals("names do not match!", "Rapid7 InsightAppSec",component.getName());
     }
 }
