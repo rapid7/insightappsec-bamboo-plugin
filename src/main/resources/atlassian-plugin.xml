@@ -26,6 +26,7 @@
         <category name="builder"/>
         <category name="deployment"/>
         <configuration class="com.rapid7.ias.bamboo.impl.InsightAppSecScanTaskConfigurator"/>
+        <runtimeTaskDataProvider class="com.rapid7.ias.bamboo.impl.InsightAppSecRuntimeDataProvider"/>
         <resource type="freemarker" name="edit" location="template/InsightAppSecScanTaskTemplate.ftl"/>
         <resource type="download" name="icon" location="images/rapid7-icon.png"/>
         <help link="task.help.link" title="task.help.title" />
