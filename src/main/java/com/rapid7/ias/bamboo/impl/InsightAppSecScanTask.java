@@ -4,6 +4,7 @@ import com.atlassian.bamboo.configuration.ConfigurationMap;
 import com.atlassian.bamboo.plan.artifact.ArtifactDefinitionContext;
 import com.atlassian.bamboo.plan.artifact.ArtifactDefinitionContextImpl;
 import com.atlassian.bamboo.plan.artifact.ArtifactPublishingResult;
+import com.atlassian.bamboo.security.SecureToken;
 import com.atlassian.bamboo.task.*;
 import com.atlassian.bamboo.util.Narrow;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
@@ -210,7 +211,7 @@ public class InsightAppSecScanTask implements CommonTaskType, IasConstants {
 
         logger.info("Publishing artifact(s) for scan");
 
-        ArtifactDefinitionContext artifact = new ArtifactDefinitionContextImpl(name, true, null);
+        ArtifactDefinitionContext artifact = new ArtifactDefinitionContextImpl(name, true, SecureToken.create());
         artifact.setCopyPattern("insightappsec-scan-*.json");
 
         ArtifactPublishingResult result = artifactManager.publish(

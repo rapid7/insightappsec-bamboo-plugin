@@ -99,19 +99,23 @@ public class InsightAppSecHelper {
         try {
             ResourceScan scan = scansApi.getScan(UUID.fromString(scanId));
 
-            status = new HashMap<String,String>() {{
-                put("Status", Objects.toString(scan.getStatus().getValue(), "Unknown"));
-                if (scan.getFailureReason() != null) {
-                    put("Reason", Objects.toString(scan.getFailureReason().getValue(), ""));
-                } else {
-                    put("Reason", "");
-                }
-            }};
+            // There are times the API returns null for status; be defensive
+            if (scan.getStatus() != null && scan.getStatus().getValue() != null) {
+                status = new HashMap<String, String>() {{
+                    put("Status", scan.getStatus().getValue());
+                    if (scan.getFailureReason() != null) {
+                        put("Reason", Objects.toString(scan.getFailureReason().getValue(), ""));
+                    } else {
+                        put("Reason", "");
+                    }
+                }};
+            }
         } catch (ApiException iase) {
             logger.error("Failed to retrieve scan by ID " + scanId + ": " + iase.getCode());
             handleException(iase);
+        } finally {
+            return status;
         }
-        return status;
     }
 
     public ResourceScanConfig getScanConfiguration(String scanConfigName, UUID appId) throws InsightAppSecException {
