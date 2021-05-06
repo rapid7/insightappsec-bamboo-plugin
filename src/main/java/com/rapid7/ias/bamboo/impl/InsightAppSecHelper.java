@@ -8,6 +8,7 @@ import com.rapid7.ias.client.api.*;
 import com.rapid7.ias.client.ApiResponse;
 import com.rapid7.ias.bamboo.util.UtilityLogger;
 import com.rapid7.ias.client.model.*;
+import com.squareup.okhttp.Call;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,6 +19,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class InsightAppSecHelper {
+
+    private String USER_AGENT = "r7:insightappsec-bamboo/1.1.1";
+    private String SCAN_CONFIG_QUERY = "scanconfig.app.id='%1$s' && scanconfig.name='%2$s'";
+
     private UtilityLogger logger;
 
     public ScansApi scansApi;
@@ -33,6 +38,7 @@ public class InsightAppSecHelper {
         ApiClient client = new ApiClient();
         client.setBasePath("https://" + region + ".api.insight.rapid7.com/ias/v1");
         client.addDefaultHeader("X-Api-Key", apiKey);
+        client.setUserAgent(USER_AGENT);
 
         scansApi = new ScansApi(client);
         scanConfigsApi = new ScanConfigsApi(client);
@@ -119,37 +125,28 @@ public class InsightAppSecHelper {
     }
 
     public ResourceScanConfig getScanConfiguration(String scanConfigName, UUID appId) throws InsightAppSecException {
-        Integer index = 0;
-        Integer size = 1000;
-        Boolean cont = true;
+        SearchRequest scanConfigSearch = new SearchRequest();
+        scanConfigSearch.type(SearchRequest.TypeEnum.SCAN_CONFIG);
+        scanConfigSearch.setQuery(String.format(SCAN_CONFIG_QUERY, appId.toString(), scanConfigName));
 
-        while(cont) {
-            try {
-                PageScanConfig scanConfigs = scanConfigsApi.getScanConfigs(index, size, null);
+        try {
+            Call searchApiCall = searchApi.performSearchCall(scanConfigSearch, 0, 50, null, null, null);
+            ApiResponse<PageScanConfig> response = searchApi.getApiClient().execute(searchApiCall, PageScanConfig.class);
 
-                List<ResourceScanConfig> listScanConfigs = scanConfigs.getData();
-                for (ResourceScanConfig scanConfig : listScanConfigs) {
-                    if (scanConfig.getName().equals(scanConfigName) && scanConfig.getApp().getId().equals(appId)) {
-                        return scanConfig;
-                    }
-                }
+            PageScanConfig resultsPage = response.getData();
+            List<ResourceScanConfig> results = resultsPage.getData();
 
-                // Check if more pages exist
-                if((index + 1) >= scanConfigs.getMetadata().getTotalPages()) {
-                    cont = false;
-                }
-            } catch (com.rapid7.ias.client.ApiException iase) {
-                logger.error("InsightAppSec Scan Config Exception: " + iase.getResponseBody() + " (" + iase.getCode() + ")");
-                handleException(iase);
-
-                return null;
-            } catch (Exception e) {
-                logger.error("Exception when calling ScanConfigsApi#getScanConfigs: " + e.toString());
+            if(results.size() != 1) {
+                logger.error("Number of app's scan configs with name " + scanConfigName + " is " + results.size()
+                                     + ". This should be exactly 1.");
                 return null;
             }
 
-            // Increment for next page
-            index++;
+            return results.get(0);
+        }
+        catch (ApiException iase) {
+            logger.error("InsightAppSec Scan Config Exception: " + iase.getResponseBody() + " (" + iase.getCode() + ")");
+            handleException(iase);
         }
 
         return null;

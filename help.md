@@ -73,6 +73,7 @@ If the scan gating doesn't appear to occur as expected, confirm that the vulnera
 
 # Version History
 
+* 1.1.1 - Add new regions to InsightAppSec Region dropdown. Use search endpoint to retrieve scan-configs.
 * 1.1.0 - Support for Atlassian Bamboo 7.0.X, Implements RuntimeDataProvider to assist with pre-fetch of API Key for tasks run on remote agents
 * 1.0.0 - Initial integration
 
