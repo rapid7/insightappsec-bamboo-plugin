@@ -136,9 +136,8 @@ public class InsightAppSecHelper {
             PageScanConfig resultsPage = response.getData();
             List<ResourceScanConfig> results = resultsPage.getData();
 
-            if(results.size() != 1) {
-                logger.error("Number of app's scan configs with name " + scanConfigName + " is " + results.size()
-                                     + ". This should be exactly 1.");
+            if(results == null || results.size() != 1) {
+                logger.error("Number of application's scan configs with name " + scanConfigName + " should be 1.");
                 return null;
             }
 
@@ -147,6 +146,9 @@ public class InsightAppSecHelper {
         catch (ApiException iase) {
             logger.error("InsightAppSec Scan Config Exception: " + iase.getResponseBody() + " (" + iase.getCode() + ")");
             handleException(iase);
+        }
+        catch (Exception e) {
+            logger.error("Exception when calling ScanConfigsApi#getScanConfigs: " + e.toString());
         }
 
         return null;
