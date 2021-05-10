@@ -22,7 +22,7 @@ public interface IasConstants {
     String VULN_QUERY_ENFORCEMENT     = "vulnQueryEnforcement";
     String VULN_QUERY                 = "vulnQuery";
 
-    List<String> REGION_OPTIONS_LIST = Arrays.asList("US","EU","AU","CA","AP","OTHER");
+    List<String> REGION_OPTIONS_LIST = Arrays.asList("US","US2","US3","EU","AU","CA","AP","OTHER");
 
     List<String> ADVANCE_ON_OPTIONS_LIST = Arrays.asList(
             "SUBMITTED",
