@@ -50,9 +50,7 @@
             "role": "primary"
         }
     ],
-    "requiredRapid7Features": [
-        "orchestrator"
-    ],
+    "requiredRapid7Features": [],
     "status": [],
     "logos": {
         "primary": "extension.png",
