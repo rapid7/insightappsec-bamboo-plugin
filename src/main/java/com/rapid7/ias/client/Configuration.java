@@ -15,7 +15,7 @@ package com.rapid7.ias.client;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2018-11-27T23:32:49.618-05:00")
 public class Configuration {
-    private static ApiClient defaultApiClient = new ApiClient();
+    private static ApiClient defaultApiClient = new ApiClient(null,null);
 
     /**
      * Get the default API client, which would be used when creating API

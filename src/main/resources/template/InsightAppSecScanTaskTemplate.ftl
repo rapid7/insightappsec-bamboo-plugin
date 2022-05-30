@@ -6,6 +6,8 @@
     [@ww.select labelKey="label.credentialList" name="selectedCred" required='true' list="credentialList"/]
     [@ww.textfield  labelKey="label.appName" name="appName" required='true'/]
     [@ww.textfield labelKey="label.scanConfigName" name="scanConfigName" required='true'/]
+    [@ww.textfield labelKey="label.proxyHost" name="proxyHost" required='false'/]
+    [@ww.textfield labelKey="label.proxyPort" name="proxyPort" required='false'/]
 [/@ui.bambooSection]
 
 [@ui.bambooSection titleKey="section.action"]
@@ -27,4 +29,8 @@
 
 [@ui.bambooSection titleKey="section.gating" descriptionKey="section.gating.details" dependsOn="vulnQueryEnforcement" showOn="true"]
     [@ww.textfield labelKey="label.vulnQuery" name="vulnQuery"/]
+[/@ui.bambooSection]
+
+[@ui.bambooSection titleKey="section.debug"]
+[@ww.checkbox  labelKey="label.debugging" name="debugging" toggle='false'/]
 [/@ui.bambooSection]

@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
@@ -71,13 +73,18 @@ public class ApiClient {
     private JSON json;
 
     private HttpLoggingInterceptor loggingInterceptor;
+    InetSocketAddress proxyAddr;
+    private Proxy proxy;
 
     /*
      * Constructor for ApiClient
      */
-    public ApiClient() {
+    public ApiClient(String proxyHost, String proxyPort) {
         httpClient = new OkHttpClient();
 
+        if(proxyHost != null && proxyHost.length() > 0 ){
+            addProxy(proxyHost, proxyPort);
+        }
 
         verifyingSsl = true;
 
@@ -90,6 +97,27 @@ public class ApiClient {
         authentications = new HashMap<String, Authentication>();
         // Prevent the authentications from being modified.
         authentications = Collections.unmodifiableMap(authentications);
+    }
+
+    private void addProxy(String proxyHost, String proxyPort) {
+        proxyAddr = new InetSocketAddress(proxyHost, Integer.parseInt(proxyPort));
+
+        proxy = new Proxy(Proxy.Type.HTTP, proxyAddr);
+        httpClient.setProxy(proxy);
+    }
+
+    public boolean checkProxyConnection() {
+      Request request = new Request.Builder()
+                .url(basePath)
+                .build();
+
+        try {
+            Response response = httpClient.newCall(request).execute();
+            response.body().close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     /**

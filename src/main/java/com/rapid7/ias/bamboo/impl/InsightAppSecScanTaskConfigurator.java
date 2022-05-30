@@ -1,5 +1,6 @@
 package com.rapid7.ias.bamboo.impl;
 
+import aQute.bnd.http.HttpClient;
 import com.atlassian.bamboo.collections.ActionParametersMap;
 import com.atlassian.bamboo.credentials.CredentialsData;
 import com.atlassian.bamboo.credentials.CredentialsAccessor;
@@ -11,6 +12,13 @@ import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.bamboo.utils.i18n.I18nBean;
 import com.atlassian.bamboo.utils.i18n.I18nBeanFactory;
 import static com.atlassian.bamboo.credentials.UsernamePasswordCredentialType.CFG_PASSWORD;
+
+import com.rapid7.ias.client.ApiClient;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+import io.swagger.annotations.Api;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +29,9 @@ import com.rapid7.ias.client.model.ResourceScanConfig;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -69,6 +80,8 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
         configMap.put(SELECTED_CREDENTIAL, params.getString(SELECTED_CREDENTIAL));
         configMap.put(APP_NAME,params.getString(APP_NAME));
         configMap.put(SCAN_CONFIG_NAME,params.getString(SCAN_CONFIG_NAME));
+        configMap.put(PROXY_HOST,params.getString(PROXY_HOST));
+        configMap.put(PROXY_PORT,params.getString(PROXY_PORT));
         configMap.put(SELECTED_ADVANCE_ON,params.getString(SELECTED_ADVANCE_ON));  // Plugin action after scan triggered
         if (params.getString(SELECTED_ADVANCE_ON).equals("STARTED")) {
             configMap.put(CHECK_INTERVAL,params.getString(CHECK_INTERVAL_STARTED));
@@ -80,6 +93,7 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
         configMap.put(MAX_EXECUTION,params.getString(MAX_EXECUTION));
         configMap.put(FINDINGS_REPORT_GENERATION,params.getString(FINDINGS_REPORT_GENERATION));
         configMap.put(VULN_QUERY_ENFORCEMENT,params.getString(VULN_QUERY_ENFORCEMENT));
+        configMap.put(DEBUGGING,params.getString(DEBUGGING));
         // Reporting related configs
         configMap.put(VULN_QUERY,params.getString(VULN_QUERY));
         return configMap;
@@ -92,39 +106,56 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
      */
     @Override
     public void validate(@NotNull ActionParametersMap params,
-                         @NotNull ErrorCollection errorCollection){
+                         @NotNull ErrorCollection errorCollection) {
         Logger log = Logger.getLogger(InsightAppSecScanTaskConfigurator.class);
         UtilityLogger logger = new UtilityLogger(log);
 
         super.validate(params, errorCollection);
         String regionValue = params.getString(SELECTED_REGION);
-        if (regionValue.equals("OTHER")){
+        if (regionValue.equals("OTHER")) {
             regionValue = params.getString(OTHER_REGION);
         }
 
         String credentialId = params.getString(SELECTED_CREDENTIAL);
         String appNameValue = params.getString(APP_NAME);
         String scanConfigNameValue = params.getString(SCAN_CONFIG_NAME);
+        String proxyHostValue = params.getString(PROXY_HOST);
+        String proxyPortValue = params.getString(PROXY_PORT);
+        String debugging = params.getString(DEBUGGING);
+        Boolean proxyEnabled = null;
 
         if (credentialId == null) {
             errorCollection.addError(SELECTED_CREDENTIAL, i18nBean.getText("error.apiKey"));
-        }else if (credentialsAccessor.getCredentials(Long.parseLong(credentialId)) == null) {
+        } else if (credentialsAccessor.getCredentials(Long.parseLong(credentialId)) == null) {
             errorCollection.addError(SELECTED_CREDENTIAL, i18nBean.getText("error.apiKeyNotExist"));
-        }else if (StringUtils.isEmpty(regionValue)){
+        } else if (StringUtils.isEmpty(regionValue)) {
             errorCollection.addError(SELECTED_REGION, i18nBean.getText("error.region"));
-        }else if(StringUtils.isEmpty(appNameValue)){
+        } else if (StringUtils.isEmpty(appNameValue)) {
             errorCollection.addError(APP_NAME, i18nBean.getText("error.appName"));
-        }else if(StringUtils.isEmpty(scanConfigNameValue)){
+        } else if (StringUtils.isEmpty(scanConfigNameValue)) {
             errorCollection.addError(SCAN_CONFIG_NAME, i18nBean.getText("error.scanConfigName"));
+        } else if (StringUtils.isNotEmpty(proxyHostValue) && !proxyHostValue.matches("^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")) {
+            errorCollection.addError(PROXY_HOST, i18nBean.getText("error.proxyHost"));
+        } else if (StringUtils.isNotEmpty(proxyPortValue) && !StringUtils.isNumeric(proxyPortValue)) {
+            errorCollection.addError(PROXY_PORT, i18nBean.getText("error.proxyPort"));
         }else{
             CredentialsData cred = credentialsAccessor.getCredentials(Long.parseLong(credentialId));
 
-            InsightAppSecHelper iasHelper = new InsightAppSecHelper(regionValue, cred.getConfiguration().get(CFG_PASSWORD), logger);
+            if (proxyHostValue.isEmpty()) {
+                proxyHostValue = proxyPortValue = null;
+            }
+            else {
+                proxyEnabled = checkProxyConnection(proxyHostValue, proxyPortValue);
+            }
+            InsightAppSecHelper iasHelper = new InsightAppSecHelper(regionValue, cred.getConfiguration().get(CFG_PASSWORD), logger, proxyHostValue, proxyPortValue, debugging);
 
             try {
                 ResourceApp application = iasHelper.getApplication(appNameValue);
-                if (application == null) {
+                if (application == null && proxyEnabled == null || application == null && proxyEnabled) {
                     errorCollection.addError(APP_NAME, i18nBean.getText("error.invalidAppConfig"));
+                } else if (application == null && !proxyEnabled) {
+                    errorCollection.addError(PROXY_HOST, i18nBean.getText("error.proxyConnection"));
+                    errorCollection.addError(PROXY_PORT, i18nBean.getText("error.proxyConnection"));
                 } else {
                     ResourceScanConfig scanConfig = iasHelper.getScanConfiguration(scanConfigNameValue, application.getId());
                     if (scanConfig == null) {
@@ -135,6 +166,13 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
                 errorCollection.addError(SELECTED_CREDENTIAL, i18nBean.getText("error.authFailure"));
             }
         }
+    }
+
+    private boolean checkProxyConnection(String proxyHostValue, String proxyPortValue) {
+        ApiClient apiClient = new ApiClient(proxyHostValue, proxyPortValue);
+        apiClient.setBasePath("https://www.google.com");
+
+        return apiClient.checkProxyConnection();
     }
 
     /**
@@ -156,6 +194,7 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
         context.put(MAX_EXECUTION, i18nBean.getText("default.maxExecution"));
         context.put(ADVANCE_ON, ADVANCE_ON_OPTIONS_LIST);
         context.put(FINDINGS_REPORT_GENERATION, i18nBean.getText("default.findingsReportGeneration"));
+        context.put(DEBUGGING, i18nBean.getText("default.debugging"));
     }
 
     /**
@@ -177,6 +216,8 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
         context.put(SELECTED_ADVANCE_ON, config.get(SELECTED_ADVANCE_ON));
         context.put(APP_NAME, config.get(APP_NAME));
         context.put(SCAN_CONFIG_NAME, config.get(SCAN_CONFIG_NAME));
+        context.put(PROXY_HOST, config.get(PROXY_HOST));
+        context.put(PROXY_PORT, config.get(PROXY_PORT));
         context.put(CHECK_INTERVAL_STARTED, config.get(CHECK_INTERVAL));
         context.put(MAX_PENDING_STARTED, config.get(MAX_PENDING));
         context.put(CHECK_INTERVAL, config.get(CHECK_INTERVAL));
@@ -185,5 +226,6 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
         context.put(FINDINGS_REPORT_GENERATION, config.get(FINDINGS_REPORT_GENERATION));
         context.put(VULN_QUERY_ENFORCEMENT, config.get(VULN_QUERY_ENFORCEMENT));
         context.put(VULN_QUERY, config.get(VULN_QUERY));
+        context.put(DEBUGGING, config.get(DEBUGGING));
     }
 }
