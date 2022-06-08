@@ -1,6 +1,5 @@
 package com.rapid7.ias.bamboo.impl;
 
-import aQute.bnd.http.HttpClient;
 import com.atlassian.bamboo.collections.ActionParametersMap;
 import com.atlassian.bamboo.credentials.CredentialsData;
 import com.atlassian.bamboo.credentials.CredentialsAccessor;
@@ -134,8 +133,6 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
             errorCollection.addError(APP_NAME, i18nBean.getText("error.appName"));
         } else if (StringUtils.isEmpty(scanConfigNameValue)) {
             errorCollection.addError(SCAN_CONFIG_NAME, i18nBean.getText("error.scanConfigName"));
-        } else if (StringUtils.isNotEmpty(proxyHostValue) && !proxyHostValue.matches("^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")) {
-            errorCollection.addError(PROXY_HOST, i18nBean.getText("error.proxyHost"));
         } else if (StringUtils.isNotEmpty(proxyPortValue) && !StringUtils.isNumeric(proxyPortValue)) {
             errorCollection.addError(PROXY_PORT, i18nBean.getText("error.proxyPort"));
         }else{
@@ -170,7 +167,7 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
 
     private boolean checkProxyConnection(String proxyHostValue, String proxyPortValue) {
         ApiClient apiClient = new ApiClient(proxyHostValue, proxyPortValue);
-        apiClient.setBasePath("https://www.google.com");
+        apiClient.setBasePath("https://www.rapid7.com");
 
         return apiClient.checkProxyConnection();
     }

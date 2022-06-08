@@ -9,7 +9,6 @@ import com.rapid7.ias.client.ApiResponse;
 import com.rapid7.ias.bamboo.util.UtilityLogger;
 import com.rapid7.ias.client.model.*;
 import com.squareup.okhttp.Call;
-import scala.util.parsing.combinator.testing.Str;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -35,9 +34,11 @@ public class InsightAppSecHelper {
     public InsightAppSecHelper(String region, String apiKey, UtilityLogger logger, String proxyHost, String proxyPort, String debugging) {
         this.logger = logger;
 
+        debugging = debugging == null || debugging.isEmpty() ? "false" : debugging;
+
         // Build generic client with API key set
         ApiClient client = new ApiClient(proxyHost, proxyPort).setDebugging(Boolean.parseBoolean(debugging));
-                client.setBasePath("https://" + region + ".api.insight.rapid7.com/ias/v1");
+        client.setBasePath("https://" + region + ".api.insight.rapid7.com/ias/v1");
         client.addDefaultHeader("X-Api-Key", apiKey);
         client.setUserAgent(USER_AGENT);
 

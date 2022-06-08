@@ -61,7 +61,7 @@ public class InsightAppSecScanTask implements CommonTaskType, IasConstants {
         proxyHost = configMap.get(PROXY_HOST);
         proxyPort = configMap.get(PROXY_PORT);
 
-        debugging = configMap.get(debugging);
+        debugging = configMap.get(DEBUGGING);
 
         if (apiKey == null) {
             logger.error("Previously configured credential is no longer defined within Bamboo; please review task and" +

@@ -79,6 +79,10 @@ public class ApiClient {
     /*
      * Constructor for ApiClient
      */
+    public ApiClient() {
+       this(null,null);
+    }
+
     public ApiClient(String proxyHost, String proxyPort) {
         httpClient = new OkHttpClient();
 
@@ -107,7 +111,7 @@ public class ApiClient {
     }
 
     public boolean checkProxyConnection() {
-      Request request = new Request.Builder()
+        Request request = new Request.Builder()
                 .url(basePath)
                 .build();
 
