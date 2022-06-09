@@ -121,17 +121,20 @@ how to set up a shared credential.
 4. Select `Add task` and choose `Rapid7 InsightAppsec Scan`
 5. Provide appropriate connection and scan details for task; each setting detailed below:
 
-| Field    | Description                 | Required|
-|----------|------------------------------|---------|
-| Task Description | The description of the task as it will appear in the plan. | false
-| InsightAppSec Region | Dropdown of InsightAppSec regions for connecting to the API. | true
-| InsightAppSec API Key | A drop-down menu to select the Rapid7 API Key to be used. | true
-| App Name | A text field to input the InsightAppSec application name that will be utilized in the scan. | true
-| Scan Config name | A text field to input the InsightAppSec scan configuration that will be utilized in the scan. | true
-| Advance task when scan has been | A drop-down menu to dictate when to move on from task; options: COMPLETED, STARTED, SUBMITTED. | true
-| Status Check Interval | The frequency (in minutes) that the scan’s status will be checked. Dependent on task advancement set to `COMPLETED` or `STARTED`. | false
-| Max Scan Pending Duration | The time (in minutes) to wait for the scan to be started. Task will be marked a failure if pending duration is reached. | false
-| Max Scan Execution Duration | The time (in minutes) to wait for the scan to be completed. Task will be marked a failure if max execution duration is reached. | false
-| Findings Report Generation | Option used to determine whether a raw JSON findings report will be generated and added as an artifact for the build. | false
-| Vulnerabilities Query Enforcement | Option used to determine whether the build will fail if the provided query returns results. | false
-| Vulnerability Query | The query executed against the completed scan's findings to retrieve any matching vulnerabilities. Dependent on the option `Vulnerabilities Query Enforcement` being checked. | false
+| Field                             | Description                                                                                                                                                                   | Required |
+|-----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| Task Description                  | The description of the task as it will appear in the plan.                                                                                                                    | false    |
+| InsightAppSec Region              | Dropdown of InsightAppSec regions for connecting to the API.                                                                                                                  | true     |
+| InsightAppSec API Key             | A drop-down menu to select the Rapid7 API Key to be used.                                                                                                                     | true     |
+| App Name                          | A text field to input the InsightAppSec application name that will be utilized in the scan.                                                                                   | true     |
+| Scan Config name                  | A text field to input the InsightAppSec scan configuration that will be utilized in the scan.                                                                                 | true     |
+| Advance task when scan has been   | A drop-down menu to dictate when to move on from task; options: COMPLETED, STARTED, SUBMITTED.                                                                                | true     |
+| Status Check Interval             | The frequency (in minutes) that the scan’s status will be checked. Dependent on task advancement set to `COMPLETED` or `STARTED`.                                             | false    |
+| Max Scan Pending Duration         | The time (in minutes) to wait for the scan to be started. Task will be marked a failure if pending duration is reached.                                                       | false    |
+| Max Scan Execution Duration       | The time (in minutes) to wait for the scan to be completed. Task will be marked a failure if max execution duration is reached.                                               | false    |
+| Findings Report Generation        | Option used to determine whether a raw JSON findings report will be generated and added as an artifact for the build.                                                         | false    |
+| Vulnerabilities Query Enforcement | Option used to determine whether the build will fail if the provided query returns results.                                                                                   | false    |
+| Vulnerability Query               | The query executed against the completed scan's findings to retrieve any matching vulnerabilities. Dependent on the option `Vulnerabilities Query Enforcement` being checked. | false    |
+| Proxy Host                        | An optional text field to input the proxy host address if required.                                                                                                           | false    |
+| Proxy Port                        | An optional text field to input the proxy port required if required.                                                                                                          | false    |
+| Server Log Debugging              | Option used to determine whether the server will output debugging results. Includes API key in output.                                                                        | false    |

@@ -12,7 +12,7 @@ public class InsightAppSecHelperTest {
     private static final String SCAN_ID = "";
 
     public static void main(String[] args) throws InsightAppSecException {
-        InsightAppSecHelper ias = new InsightAppSecHelper(REGION, API_KEY, null);
+        InsightAppSecHelper ias = new InsightAppSecHelper(REGION, API_KEY, null, null, null, null);
 
         List<ResourceVulnerability> findings = ias.getFindings(SCAN_ID, "");
 

@@ -21,6 +21,10 @@ public interface IasConstants {
     String FINDINGS_REPORT_GENERATION = "findingsReportGeneration";
     String VULN_QUERY_ENFORCEMENT     = "vulnQueryEnforcement";
     String VULN_QUERY                 = "vulnQuery";
+    String PROXY_HOST                 = "proxyHost";
+    String PROXY_PORT                 = "proxyPort";
+    String DEBUGGING                  = "debugging";
+
 
     List<String> REGION_OPTIONS_LIST = Arrays.asList("US","US2","US3","EU","AU","CA","AP","OTHER");
 

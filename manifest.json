@@ -21,8 +21,13 @@
         "sourceUrl": "https://github.com/rapid7/insightappsec-bamboo-plugin",
         "licenseUrl": "https://github.com/rapid7/insightappsec-bamboo-plugin/blob/master/LICENSE"
     },
-    "version": "1.1.2",
+    "version": "1.2.0",
     "versionHistory": [
+        {
+            "version": "1.2.0",
+            "date": "",
+            "changes": "Add proxy connection. Add server logs debugging."
+        },
         {
             "version": "1.1.2",
             "date": "",

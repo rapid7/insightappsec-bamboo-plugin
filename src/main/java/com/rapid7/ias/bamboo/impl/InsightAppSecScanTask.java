@@ -32,6 +32,10 @@ public class InsightAppSecScanTask implements CommonTaskType, IasConstants {
     private String region;
     private String appName;
     private String scanConfigName;
+    private String proxyHost;
+    private String proxyPort;
+
+    private String debugging;
 
     @ComponentImport ArtifactManager artifactManager;
 
@@ -54,6 +58,11 @@ public class InsightAppSecScanTask implements CommonTaskType, IasConstants {
         appName = configMap.get(APP_NAME);
         scanConfigName = configMap.get(SCAN_CONFIG_NAME);
 
+        proxyHost = configMap.get(PROXY_HOST);
+        proxyPort = configMap.get(PROXY_PORT);
+
+        debugging = configMap.get(DEBUGGING);
+
         if (apiKey == null) {
             logger.error("Previously configured credential is no longer defined within Bamboo; please review task and" +
                     " credential configuration");
@@ -66,7 +75,8 @@ public class InsightAppSecScanTask implements CommonTaskType, IasConstants {
         logger.info("Scan Config: "+ scanConfigName);
 
         // Initialize helper with necessary clients
-        InsightAppSecHelper iasHelper = new InsightAppSecHelper(region, apiKey, logger);
+        InsightAppSecHelper iasHelper = new InsightAppSecHelper(region, apiKey, logger, proxyHost
+        , proxyPort, debugging);
 
         try {
             ResourceApp app = iasHelper.getApplication(appName);

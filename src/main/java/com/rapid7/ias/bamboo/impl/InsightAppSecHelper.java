@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 public class InsightAppSecHelper {
 
-    private String USER_AGENT = "r7:insightappsec-bamboo/1.1.2";
+    private String USER_AGENT = "r7:insightappsec-bamboo/1.2.0";
     private String SCAN_CONFIG_QUERY = "scanconfig.app.id='%1$s' && scanconfig.name='%2$s'";
 
     private UtilityLogger logger;
@@ -31,11 +31,13 @@ public class InsightAppSecHelper {
     public SearchApi searchApi;
     public VulnerabilitiesApi vulnerabilitiesApi;
 
-    public InsightAppSecHelper(String region, String apiKey, UtilityLogger logger) {
+    public InsightAppSecHelper(String region, String apiKey, UtilityLogger logger, String proxyHost, String proxyPort, String debugging) {
         this.logger = logger;
 
+        debugging = debugging == null || debugging.isEmpty() ? "false" : debugging;
+
         // Build generic client with API key set
-        ApiClient client = new ApiClient();
+        ApiClient client = new ApiClient(proxyHost, proxyPort).setDebugging(Boolean.parseBoolean(debugging));
         client.setBasePath("https://" + region + ".api.insight.rapid7.com/ias/v1");
         client.addDefaultHeader("X-Api-Key", apiKey);
         client.setUserAgent(USER_AGENT);
@@ -175,8 +177,12 @@ public class InsightAppSecHelper {
                     cont = false;
                 }
             } catch (com.rapid7.ias.client.ApiException iase) {
+                String message = iase.getCause() == null ? null : iase.getCause().toString();
+
                 logger.error("InsightAppSec Apps Client Exception: " + iase.getResponseBody() +
                         " (" + iase.getCode() + ")");
+                logger.error("Error Message: " + message);
+
                 handleException(iase);
 
                 return null;
