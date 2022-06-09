@@ -13,11 +13,6 @@ import com.atlassian.bamboo.utils.i18n.I18nBeanFactory;
 import static com.atlassian.bamboo.credentials.UsernamePasswordCredentialType.CFG_PASSWORD;
 
 import com.rapid7.ias.client.ApiClient;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-import io.swagger.annotations.Api;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,9 +23,6 @@ import com.rapid7.ias.client.model.ResourceScanConfig;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -139,7 +131,8 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
             CredentialsData cred = credentialsAccessor.getCredentials(Long.parseLong(credentialId));
 
             if (proxyHostValue.isEmpty()) {
-                proxyHostValue = proxyPortValue = null;
+                proxyHostValue = null;
+                proxyPortValue = null;
             }
             else {
                 proxyEnabled = checkProxyConnection(proxyHostValue, proxyPortValue);

@@ -73,7 +73,7 @@ public class ApiClient {
     private JSON json;
 
     private HttpLoggingInterceptor loggingInterceptor;
-    InetSocketAddress proxyAddr;
+
     private Proxy proxy;
 
     /*
@@ -104,6 +104,8 @@ public class ApiClient {
     }
 
     private void addProxy(String proxyHost, String proxyPort) {
+        InetSocketAddress proxyAddr;
+
         proxyAddr = new InetSocketAddress(proxyHost, Integer.parseInt(proxyPort));
 
         proxy = new Proxy(Proxy.Type.HTTP, proxyAddr);
