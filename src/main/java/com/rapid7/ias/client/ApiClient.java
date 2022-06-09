@@ -74,8 +74,6 @@ public class ApiClient {
 
     private HttpLoggingInterceptor loggingInterceptor;
 
-    private Proxy proxy;
-
     /*
      * Constructor for ApiClient
      */
@@ -104,11 +102,9 @@ public class ApiClient {
     }
 
     private void addProxy(String proxyHost, String proxyPort) {
-        InetSocketAddress proxyAddr;
+        InetSocketAddress proxyAddr = new InetSocketAddress(proxyHost, Integer.parseInt(proxyPort));
+        Proxy proxy = new Proxy(Proxy.Type.HTTP, proxyAddr);
 
-        proxyAddr = new InetSocketAddress(proxyHost, Integer.parseInt(proxyPort));
-
-        proxy = new Proxy(Proxy.Type.HTTP, proxyAddr);
         httpClient.setProxy(proxy);
     }
 
