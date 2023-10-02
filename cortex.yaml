@@ -1,0 +1,15 @@
+---
+info:
+  title: Insightappsec Bamboo Plugin
+  description: Rapid7 InsightAppSec Plugin for Atlassian Bamboo
+  x-cortex-git:
+    github:
+      alias: r7org
+      repository: rapid7/insightappsec-bamboo-plugin
+  x-cortex-tag: insightappsec-bamboo-plugin
+  x-cortex-type: service
+  x-cortex-domain-parents:
+  - tag: ias-integration
+openapi: 3.0.1
+servers:
+- url: "/"
