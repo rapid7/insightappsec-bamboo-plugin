@@ -73,6 +73,7 @@ If the scan gating doesn't appear to occur as expected, confirm that the vulnera
 
 # Version History
 
+* 1.2.1 - Update dependencies
 * 1.2.0 - Add proxy connection. Add server logs debugging.
 * 1.1.2 - Update dependencies
 * 1.1.1 - Add new regions to InsightAppSec Region dropdown. Use search endpoint to retrieve scan-configs.
