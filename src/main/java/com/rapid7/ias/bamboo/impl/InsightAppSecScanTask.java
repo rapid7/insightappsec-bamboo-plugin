@@ -5,7 +5,12 @@ import com.atlassian.bamboo.plan.artifact.ArtifactDefinitionContext;
 import com.atlassian.bamboo.plan.artifact.ArtifactDefinitionContextImpl;
 import com.atlassian.bamboo.plan.artifact.ArtifactPublishingResult;
 import com.atlassian.bamboo.security.SecureToken;
-import com.atlassian.bamboo.task.*;
+import com.atlassian.bamboo.task.CommonTaskContext;
+import com.atlassian.bamboo.task.CommonTaskType;
+import com.atlassian.bamboo.task.TaskContext;
+import com.atlassian.bamboo.task.TaskException;
+import com.atlassian.bamboo.task.TaskResult;
+import com.atlassian.bamboo.task.TaskResultBuilder;
 import com.atlassian.bamboo.util.Narrow;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
@@ -16,9 +21,10 @@ import com.rapid7.ias.bamboo.util.UtilityLogger;
 import com.rapid7.ias.client.model.ResourceApp;
 import com.rapid7.ias.client.model.ResourceScanConfig;
 import com.rapid7.ias.client.model.ResourceVulnerability;
+import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.*;
@@ -27,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 @Scanned
 public class InsightAppSecScanTask implements CommonTaskType, IasConstants {
     private UtilityLogger logger;
-    private static final Logger log = Logger.getLogger(InsightAppSecScanTask.class);
+    private static final Logger log = LogManager.getLogger(InsightAppSecScanTask.class);
 
     private String region;
     private String appName;

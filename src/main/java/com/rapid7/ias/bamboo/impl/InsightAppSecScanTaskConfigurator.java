@@ -13,6 +13,7 @@ import com.atlassian.bamboo.utils.i18n.I18nBeanFactory;
 import static com.atlassian.bamboo.credentials.UsernamePasswordCredentialType.CFG_PASSWORD;
 
 import com.rapid7.ias.client.ApiClient;
+import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +22,7 @@ import com.rapid7.ias.client.model.ResourceApp;
 import com.rapid7.ias.client.model.ResourceScanConfig;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -98,7 +99,7 @@ public class InsightAppSecScanTaskConfigurator extends AbstractTaskConfigurator 
     @Override
     public void validate(@NotNull ActionParametersMap params,
                          @NotNull ErrorCollection errorCollection) {
-        Logger log = Logger.getLogger(InsightAppSecScanTaskConfigurator.class);
+        Logger log = LogManager.getLogger(InsightAppSecScanTaskConfigurator.class);
         UtilityLogger logger = new UtilityLogger(log);
 
         super.validate(params, errorCollection);
