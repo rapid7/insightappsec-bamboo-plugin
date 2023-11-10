@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.rapid7.ias.bamboo</groupId>
     <artifactId>insightappsec-bamboo-plugin</artifactId>
-    <version>1.2.1</version>
+    <version>1.2.2</version>
 
     <scm>
         <url>https://github.com/rapid7/insightappsec-bamboo-plugin</url>
@@ -41,6 +41,8 @@
         <gson-fire-version>1.8.0</gson-fire-version>
         <mockito-core.version>2.8.9</mockito-core.version>
         <log4j.version>1.2.17-atlassian-18</log4j.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
+        <apache-logging.version>2.21.1</apache-logging.version>
     </properties>
 
     <dependencies>
@@ -94,13 +96,17 @@
                     <groupId>org.apache.activemq</groupId>
                     <artifactId>activemq-openwire-legacy</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
+            <version>${commons-lang3.version}</version>
         </dependency>
 
         <dependency>
@@ -132,9 +138,9 @@
         </dependency>
 
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${apache-logging.version}</version>
         </dependency>
 
         <dependency>

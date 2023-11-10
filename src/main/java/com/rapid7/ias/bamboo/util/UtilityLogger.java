@@ -1,7 +1,7 @@
 package com.rapid7.ias.bamboo.util;
 
 import com.atlassian.bamboo.build.logger.BuildLogger;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 public class UtilityLogger {
 
