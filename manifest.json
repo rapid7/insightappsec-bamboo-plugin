@@ -24,6 +24,11 @@
     "version": "1.2.2",
     "versionHistory": [
         {
+            "version": "1.2.3",
+            "date": "",
+            "changes": "Updating dependencies and excluding unnecessary dependencies."
+        },
+        {
             "version": "1.2.2",
             "date": "",
             "changes": "Update dependencies."
