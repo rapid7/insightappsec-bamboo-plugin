@@ -120,10 +120,6 @@
                     <artifactId>commons-compress</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>software.amazon.ion</groupId>
-                    <artifactId>ion-java</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>org.apache.maven</groupId>
                     <artifactId>maven-embedder</artifactId>
                 </exclusion>
@@ -145,6 +141,24 @@
         </dependency>
 
         <dependency>
+            <groupId>net.minidev</groupId>
+            <artifactId>json-smart</artifactId>
+            <version>2.4.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-http</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.21</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-embedder</artifactId>
             <version>${maven-core.version}</version>
@@ -157,9 +171,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-http</artifactId>
-            <version>${jetty.version}</version>
+            <groupId>org.tmatesoft.sqljet</groupId>
+            <artifactId>sqljet</artifactId>
+            <version>1.1.15</version>
         </dependency>
 
         <dependency>
