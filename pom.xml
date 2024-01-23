@@ -137,7 +137,6 @@
                     <groupId>org.tmatesoft.sqljet</groupId>
                     <artifactId>sqljet</artifactId>
                 </exclusion>
-<!--                New after changing build plugin-->
                 <exclusion>
                     <groupId>com.google.code.findbugs</groupId>
                     <artifactId>jsr305</artifactId>
