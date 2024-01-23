@@ -26,7 +26,7 @@
     <properties>
         <bamboo.version>9.0.4</bamboo.version>
         <bamboo.data.version>9.0.4</bamboo.data.version>
-        <amps.version>6.3.21</amps.version>
+        <amps.version>8.10.1</amps.version>
         <plugin.testrunner.version>2.0.1</plugin.testrunner.version>
         <atlassian.spring.scanner.version>1.2.13</atlassian.spring.scanner.version>
         <!-- This key is used to keep the consistency between the key in atlassian-plugin.xml and the key to generate bundle. -->
@@ -41,7 +41,6 @@
         <gson-fire-version>1.8.0</gson-fire-version>
         <mockito-core.version>2.8.9</mockito-core.version>
         <log4j.version>1.2.17-atlassian-18</log4j.version>
-        <commons-lang3.version>3.12.0</commons-lang3.version>
         <apache-logging.version>2.21.1</apache-logging.version>
         <json.version>20231013</json.version>
         <plexus-utils.version>4.0.0</plexus-utils.version>
@@ -131,16 +130,31 @@
                     <artifactId>maven-core</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>org.apache.maven</groupId>
+                    <artifactId>maven-model</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.tmatesoft.sqljet</groupId>
                     <artifactId>sqljet</artifactId>
                 </exclusion>
+<!--                New after changing build plugin-->
+                <exclusion>
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>jsr305</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
             </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
         </dependency>
 
         <dependency>
@@ -165,12 +179,40 @@
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-embedder</artifactId>
             <version>${maven-core.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
             <version>${maven-core.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -233,6 +275,12 @@
             <artifactId>atlassian-plugins-osgi-testrunner</artifactId>
             <version>${plugin.testrunner.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -242,13 +290,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- rapid7 InsightAppSec Java Client -->
-        <!--<dependency>-->
-            <!--<groupId>com.rapid7.ias</groupId>-->
-            <!--<artifactId>insightappsec-client</artifactId>-->
-            <!--<version>0.1.0</version>-->
-        <!--</dependency>-->
-        <!-- rapid7 InsightAppSec Java Client dependencies -->
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
@@ -300,14 +341,13 @@
         <plugins>
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-bamboo-plugin</artifactId>
+                <artifactId>bamboo-maven-plugin</artifactId>
                 <version>${amps.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <productVersion>${bamboo.version}</productVersion>
                     <productDataVersion>${bamboo.data.version}</productDataVersion>
                     <enableQuickReload>true</enableQuickReload>
-                    <enableFastdev>false</enableFastdev>
 
                     <!-- See here for an explanation of default instructions: -->
                     <!-- https://developer.atlassian.com/docs/advanced-topics/configuration-of-instructions-in-atlassian-plugins -->

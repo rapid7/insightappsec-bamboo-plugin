@@ -1,16 +1,11 @@
 package com.rapid7.ias.bamboo.impl;
 
-import com.atlassian.bamboo.ResultKey;
 import com.atlassian.bamboo.credentials.CredentialsAccessor;
 import com.atlassian.bamboo.credentials.CredentialsData;
-import com.atlassian.bamboo.security.SecureToken;
-import com.atlassian.bamboo.security.SecureTokenService;
-import com.atlassian.bamboo.serialization.WhitelistedSerializable;
 import com.atlassian.bamboo.task.RuntimeTaskDataProvider;
 import com.atlassian.bamboo.task.TaskDefinition;
 import com.atlassian.bamboo.task.runtime.RuntimeTaskDefinition;
 import com.atlassian.bamboo.v2.build.CommonContext;
-import com.atlassian.bamboo.v2.build.agent.messages.AuthenticableMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
