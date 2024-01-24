@@ -73,6 +73,7 @@ If the scan gating doesn't appear to occur as expected, confirm that the vulnera
 
 # Version History
 
+* 1.2.3 - Update dependencies and excluding unnecessary dependencies
 * 1.2.2 - Update dependencies
 * 1.2.1 - Excluding unnecessary dependencies
 * 1.2.0 - Add proxy connection. Add server logs debugging.

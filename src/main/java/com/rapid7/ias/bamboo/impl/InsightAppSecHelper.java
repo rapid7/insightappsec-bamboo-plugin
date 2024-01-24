@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 public class InsightAppSecHelper {
 
-    private String USER_AGENT = "r7:insightappsec-bamboo/1.2.2";
+    private String USER_AGENT = "r7:insightappsec-bamboo/1.2.3";
     private String SCAN_CONFIG_QUERY = "scanconfig.app.id='%1$s' && scanconfig.name='%2$s'";
 
     private UtilityLogger logger;
